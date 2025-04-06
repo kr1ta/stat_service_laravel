@@ -5,18 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserStatistic extends Model
+class DailyStatistic extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_statistics';
-
+    protected $table = 'daily_statistics';
     protected $fillable = [
         'user_id',
-        'total_tasks_completed',
+        'tag_id',
+        'title',
+        'intervalable_id',
+        'type',
         'total_intervals',
-        'total_habit_time',
-        'total_task_time',
+        'time_spent',
     ];
 
     public $timestamps = true;
