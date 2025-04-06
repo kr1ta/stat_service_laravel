@@ -32,7 +32,7 @@ class MyKafkaConsumer extends Command
                     $payload = json_decode($message->payload, true);
 
                     \Log::info("data: {$message->payload}");
-                    $this->processMessage($payload);
+                    $this->processMessage($payload['message']);
                     break;
 
                 case RD_KAFKA_RESP_ERR__PARTITION_EOF:
