@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'validate_token' => [
+        'url' => env('VALIDATE_TOKEN_URL', 'http://localhost:8001/api/validate-token'),
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

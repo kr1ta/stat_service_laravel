@@ -14,13 +14,10 @@ class CreateDailyStatisticsTable extends Migration
             $table->integer('total_intervals')->default(0);
             $table->integer('early_completed_intervals')->default(0); // Досрочно завершённые интервалы
 
-            $table->integer('habit_time')->default(0); // Время на привычки
-            $table->integer('habit_count')->default(0); // Количество интервалов для привычек
-
             $table->json('tag_stats')->nullable(); // Массив данных о тегах
             $table->json('intervalable_stats')->nullable(); // Массив данных о задачах/привычках
 
-            $table->timestamps();
+            $table->date('date');
         });
     }
 

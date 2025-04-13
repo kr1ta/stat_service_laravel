@@ -5,18 +5,22 @@ namespace App\Handlers;
 use App\Models\UserStatistic;
 use InvalidArgumentException;
 
-class UserStatisticHandler implements MessageHandlerInterface
+class UserStatisticStopHandler implements MessageHandlerInterface
 {
     public static function handle(array $payload): void
     {
+        // Проверяем обязательные поля
+        if (!isset($payload['user_id'], $payload['type'], $payload['unspent_time'])) {
+            throw new InvalidArgumentException('Missing required fields in payload for stop');
+        }
+
         // Находим или создаём новую запись по user_id
         $statistic = UserStatistic::firstOrNew([
             'user_id' => $payload['user_id'],
         ]);
 
-        $duration = $payload['update_type'] === 'stop'
-            ? 0 - $payload['unspent_time']
-            : $payload['duration'];
+        // Вычитаем неиспользованное время
+        $duration = 0 - ($payload['unspent_time'] ?? 0);
 
         switch ($payload['type']) {
             case 'habit':
@@ -25,16 +29,10 @@ class UserStatisticHandler implements MessageHandlerInterface
 
             case 'task':
                 $statistic->total_task_time = ($statistic->total_task_time ?? 0) + $duration;
-                // $statistic->total_tasks_completed = ($statistic->total_tasks_completed ?? 0) + ($payload['update_type'] === 'stop' ? 1 : 0);
                 break;
 
             default:
                 throw new InvalidArgumentException('Invalid type in payload');
-        }
-
-        // Увеличиваем общее количество интервалов только для "start"
-        if ($payload['update_type'] === 'start') {
-            $statistic->total_intervals = ($statistic->total_intervals ?? 0) + 1;
         }
 
         $statistic->save();

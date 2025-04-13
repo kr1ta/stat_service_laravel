@@ -5,8 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use RdKafka\Conf;
 use RdKafka\KafkaConsumer;
-use App\Handlers\UserStatisticHandler;
-
+use App\Factories\HandlerFactory;
 class MyKafkaConsumer extends Command
 {
     protected $signature = 'kafka:consume';
@@ -31,7 +30,8 @@ class MyKafkaConsumer extends Command
                 case RD_KAFKA_RESP_ERR_NO_ERROR:
                     $payload = json_decode($message->payload, true);
 
-                    \Log::info("data: {$message->payload}");
+                    \Log::info(json_encode($payload['message'], JSON_PRETTY_PRINT));
+
                     $this->processMessage($payload['message']);
                     break;
 
@@ -50,8 +50,20 @@ class MyKafkaConsumer extends Command
     private function processMessage($payload)
     {
         $this->info("Received smth");
-        $this->info("type: {$payload['type']}");
+        \Log::info(json_encode($payload, JSON_PRETTY_PRINT));
 
-        UserStatisticHandler::handle($payload);
+        $updateType = $payload['update_type'] ?? null;
+
+        // Список обработчиков
+        $handlers = ['UserStatistic', 'DailyStatistic'];
+
+        foreach ($handlers as $handlerName) {
+            $handler = HandlerFactory::getHandler($updateType, $handlerName);
+            if ($handler) {
+                $handler::handle($payload);
+            } else {
+                \Log::warning("Handler not found for type: {$updateType}, handler: {$handlerName}");
+            }
+        }
     }
 }

@@ -2,23 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DailyStatistic extends Model
 {
-    use HasFactory;
+    public $timestamps = false;
 
     protected $table = 'daily_statistics';
+
     protected $fillable = [
         'user_id',
-        'tag_id',
-        'title',
-        'intervalable_id',
-        'type',
+        'date',
         'total_intervals',
-        'time_spent',
+        'early_completed_intervals',
+        'tag_stats',
+        'intervalable_stats',
     ];
-
-    public $timestamps = true;
 }
