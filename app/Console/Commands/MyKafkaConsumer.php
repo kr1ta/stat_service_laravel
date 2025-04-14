@@ -15,7 +15,7 @@ class MyKafkaConsumer extends Command
     {
         $conf = new Conf();
         $conf->set('group.id', 'task_service_group');
-        $conf->set('metadata.broker.list', 'localhost:9092');
+        $conf->set('metadata.broker.list', env('KAFKA_BROKER'));
         $conf->set('auto.offset.reset', 'earliest');
 
         $consumer = new KafkaConsumer($conf);
@@ -24,7 +24,7 @@ class MyKafkaConsumer extends Command
         echo "Waiting for messages...\n";
 
         while (true) {
-            $message = $consumer->consume(10 * 1000); // Таймаут в миллисекундах
+            $message = $consumer->consume(120 * 1000); // Таймаут в миллисекундах
 
             switch ($message->err) {
                 case RD_KAFKA_RESP_ERR_NO_ERROR:
