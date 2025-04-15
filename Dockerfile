@@ -1,5 +1,5 @@
 # Базовый образ PHP
-FROM php:8.2-fpm
+FROM php:8.4-fpm
 
 # Установка необходимых расширений
 RUN apt-get update && apt-get install -y \
@@ -21,9 +21,7 @@ COPY . .
 # Установка зависимостей
 RUN composer install --no-dev --optimize-autoloader
 
-# Публикация конфигураций Laravel
-RUN php artisan config:cache
-RUN php artisan route:cache
+RUN php artisan config:clear
 
 # Открытие порта
 EXPOSE 8000
