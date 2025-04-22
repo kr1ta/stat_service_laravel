@@ -4,13 +4,14 @@ namespace App\Handlers;
 
 use App\Models\DailyStatistic;
 use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 class DailyStatisticStartHandler implements MessageHandlerInterface
 {
     public static function handle(array $payload): void
     {
         // Проверяем обязательные поля в payload
-        if (!isset($payload['user_id'], $payload['type'], $payload['tag_stats'])) {
+        if (! isset($payload['user_id'], $payload['type'], $payload['tag_stats'])) {
             throw new InvalidArgumentException('Missing required fields in payload for start');
         }
 
@@ -49,7 +50,7 @@ class DailyStatisticStartHandler implements MessageHandlerInterface
         if (in_array($payload['type'], ['task', 'habit'])) {
             $intervalableId = $payload['intervalable_id'];
 
-            if (!isset($intervalableStats[$payload['type']][$intervalableId])) {
+            if (! isset($intervalableStats[$payload['type']][$intervalableId])) {
                 $intervalableStats[$payload['type']][$intervalableId] = [
                     'time' => 0,
                     'interval_amount' => 0,

@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserStatisticController;
 use App\Http\Controllers\DailyStatisticController;
+use App\Http\Controllers\UserStatisticController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['validate.token'])->group(function () {
     // Роуты для получения статистики

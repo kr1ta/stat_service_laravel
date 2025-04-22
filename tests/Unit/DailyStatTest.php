@@ -1,14 +1,12 @@
 <?php
 
 namespace Tests\Unit;
-use App\Models\UserStatistic;
+
 use App\Http\Controllers\DailyStatisticController;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
-use App\Repositories\UserStatisticRepository;
 
 uses(DatabaseTransactions::class);
-use PHPUnit\Framework\TestCase;
 
 test('it returns user statistics when statistics exist', function () {
     $this->withoutMiddleware();
@@ -24,7 +22,8 @@ test('it returns user statistics when statistics exist', function () {
     ];
 
     // Создаем поддельный контроллер
-    $controller = new class {
+    $controller = new class
+    {
         public function show($userId)
         {
             return response()->json([
@@ -46,14 +45,14 @@ test('it returns user statistics when statistics exist', function () {
 
     // Проверяем результат
     $response->assertStatus(200)
-             ->assertJson([
-                'id' => 3,
-                'user_id' => 3,
-                'total_intervals' => 3,
-                'early_completed_interval' => 3,
-                'habit_time' => 3,
-                'habbit_count' => 3,
-             ]);
+        ->assertJson([
+            'id' => 3,
+            'user_id' => 3,
+            'total_intervals' => 3,
+            'early_completed_interval' => 3,
+            'habit_time' => 3,
+            'habbit_count' => 3,
+        ]);
 });
 
 test('it returns 404 when user statistics do not exist', function () {
@@ -61,14 +60,14 @@ test('it returns 404 when user statistics do not exist', function () {
 
     // Замокаем метод where->first, чтобы он возвращал null
     DB::shouldReceive('table->where->first')
-      ->andReturn(null);
+        ->andReturn(null);
 
     // Выполняем запрос к эндпоинту
     $response = $this->getJson('/api/daily-statistics/999');
 
     // Проверяем результат
     $response->assertStatus(404)
-             ->assertJson(['message' => 'Daily statistics not found']);
+        ->assertJson(['message' => 'Daily statistics not found']);
 });
 
 test('it returns 401 when user is not authorized', function () {

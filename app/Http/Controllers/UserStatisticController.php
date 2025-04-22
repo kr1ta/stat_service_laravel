@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserStatistic;
-use Illuminate\Http\Request;
 
 class UserStatisticController extends Controller
 {
@@ -11,7 +10,7 @@ class UserStatisticController extends Controller
     {
         $statistic = UserStatistic::where('user_id', $userId)->first();
 
-        if (!$statistic) {
+        if (! $statistic) {
             return response()->json(['message' => 'Statistics not found'], 404);
         }
 

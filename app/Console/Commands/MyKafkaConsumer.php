@@ -2,18 +2,20 @@
 
 namespace App\Console\Commands;
 
+use App\Factories\HandlerFactory;
 use Illuminate\Console\Command;
 use RdKafka\Conf;
 use RdKafka\KafkaConsumer;
-use App\Factories\HandlerFactory;
+
 class MyKafkaConsumer extends Command
 {
     protected $signature = 'kafka:consume';
+
     protected $description = 'Consume messages from Kafka';
 
     public function handle()
     {
-        $conf = new Conf();
+        $conf = new Conf;
         $conf->set('group.id', 'task_service_group');
         $conf->set('metadata.broker.list', env('KAFKA_BROKER'));
         $conf->set('auto.offset.reset', 'earliest');
@@ -49,7 +51,7 @@ class MyKafkaConsumer extends Command
 
     private function processMessage($payload)
     {
-        $this->info("Received smth");
+        $this->info('Received smth');
         \Log::info(json_encode($payload, JSON_PRETTY_PRINT));
 
         $updateType = $payload['update_type'] ?? null;

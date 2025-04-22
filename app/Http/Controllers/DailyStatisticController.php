@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailyStatistic;
-use Illuminate\Http\Request;
 
 class DailyStatisticController extends Controller
 {
@@ -14,7 +13,7 @@ class DailyStatisticController extends Controller
             // ->where('date', $date)
             ->first();
 
-        if (!$statistic) {
+        if (! $statistic) {
             return response()->json(['message' => 'Daily statistics not found'], 404);
         }
 

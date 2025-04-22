@@ -10,7 +10,7 @@ class UserStatisticStartHandler implements MessageHandlerInterface
     public static function handle(array $payload): void
     {
         // Проверяем обязательные поля
-        if (!isset($payload['user_id'], $payload['type'])) {
+        if (! isset($payload['user_id'], $payload['type'])) {
             throw new InvalidArgumentException('Missing required fields in payload for start');
         }
 
