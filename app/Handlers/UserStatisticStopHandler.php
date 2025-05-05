@@ -23,11 +23,11 @@ class UserStatisticStopHandler implements MessageHandlerInterface
         $duration = 0 - ($payload['unspent_time'] ?? 0);
 
         switch ($payload['type']) {
-            case 'habit':
+            case 'habits':
                 $statistic->total_habit_time = ($statistic->total_habit_time ?? 0) + $duration;
                 break;
 
-            case 'task':
+            case 'tasks':
                 $statistic->total_task_time = ($statistic->total_task_time ?? 0) + $duration;
                 break;
 

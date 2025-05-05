@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Factories\HandlerFactory;
+use App\Models\UserStatistic;
 use Illuminate\Console\Command;
+use InvalidArgumentException;
 use RdKafka\Conf;
 use RdKafka\KafkaConsumer;
 
@@ -56,6 +58,18 @@ class MyKafkaConsumer extends Command
 
         $updateType = $payload['update_type'] ?? null;
 
+        if ($updateType == 'status') {
+            \Log::warning('in status change event');
+            $this->processTaskStatus($payload);
+        } else {
+            \Log::warning('in stop/start change event');
+            $this->processTimeInterval($payload, $updateType);
+        }
+
+    }
+
+    private function processTimeInterval($payload, $updateType)
+    {
         // Список обработчиков
         $handlers = ['UserStatistic', 'DailyStatistic'];
 
@@ -67,5 +81,24 @@ class MyKafkaConsumer extends Command
                 \Log::warning("Handler not found for type: {$updateType}, handler: {$handlerName}");
             }
         }
+    }
+
+    private function processTaskStatus($payload)
+    {
+        if (! isset($payload['user_id'])) {
+            throw new InvalidArgumentException('Missing required fields in payload for status change event');
+        }
+
+        $statistic = UserStatistic::firstOrNew([
+            'user_id' => $payload['user_id'],
+        ]);
+
+        $statistic->total_tasks_completed += match ($payload['new_status']) {
+            'Completed' => 1,
+            'In Progress' => -1,
+            default => 0,
+        };
+
+        $statistic->save();
     }
 }

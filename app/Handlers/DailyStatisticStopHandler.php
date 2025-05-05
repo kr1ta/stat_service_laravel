@@ -37,7 +37,7 @@ class DailyStatisticStopHandler implements MessageHandlerInterface
 
         // Работаем с intervalable_stats
         $intervalableStats = json_decode($statistic->intervalable_stats ?? '{}', true);
-        if (in_array($payload['type'], ['task', 'habit'])) {
+        if (in_array($payload['type'], ['tasks', 'habits'])) {
             $intervalableId = $payload['intervalable_id'];
 
             if (! isset($intervalableStats[$payload['type']][$intervalableId])) {
