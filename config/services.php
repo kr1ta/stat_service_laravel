@@ -18,6 +18,10 @@ return [
         'url' => env('VALIDATE_TOKEN_URL', 'http://localhost:8001/api/validate-token'),
     ],
 
+    'kafka_broker' => [
+        'url' => env('KAFKA_BROKER', 'localhost:9092'),
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

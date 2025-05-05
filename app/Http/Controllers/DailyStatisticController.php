@@ -3,20 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailyStatistic;
+use Illuminate\Support\Facades\Response;
 
 class DailyStatisticController extends Controller
 {
-    public function show($userId)
+    public function show($userId, $date = null)
     {
-        $date = now()->toDateString(); // Текущая дата
+        // Если дата не указана — берем текущую
+        $date = $date ?? now()->toDateString();
+
         $statistic = DailyStatistic::where('user_id', $userId)
-            // ->where('date', $date)
+            ->where('date', $date)
             ->first();
 
         if (! $statistic) {
-            return response()->json(['message' => 'Daily statistics not found'], 404);
+            return Response::json(['message' => 'Daily statistics not found'], 404);
         }
 
-        return response()->json($statistic);
+        return Response::json($statistic);
     }
 }
