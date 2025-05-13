@@ -66,8 +66,16 @@ test('it returns 404 when user statistics do not exist', function () {
     $response = $this->getJson('/api/daily-statistics/999');
 
     // Проверяем результат
-    $response->assertStatus(404)
-        ->assertJson(['message' => 'Daily statistics not found']);
+    $response->assertStatus(404);
+    $response->assertJson([
+        'data' => null,
+        'errors' => [
+            [
+                'code' => 'not_found',
+                'message' => 'Daily statistics not found',
+            ],
+        ],
+    ]);
 });
 
 test('it returns 401 when user is not authorized', function () {
@@ -79,6 +87,12 @@ test('it returns 401 when user is not authorized', function () {
 
     // Проверяем, что в ответе содержится сообщение об ошибке
     $response->assertJson([
-        'message' => 'Токен не предоставлен', // Замените на реальное сообщение из вашего middleware
+        'data' => null,
+        'errors' => [
+            [
+                'code' => 'data_missing',
+                'message' => 'Token not provided',
+            ],
+        ],
     ]);
 });

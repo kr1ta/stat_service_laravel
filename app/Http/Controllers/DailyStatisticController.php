@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailyStatistic;
-use Illuminate\Support\Facades\Response;
+use App\Services\ResponseHelperService;
 
 class DailyStatisticController extends Controller
 {
@@ -17,9 +17,14 @@ class DailyStatisticController extends Controller
             ->first();
 
         if (! $statistic) {
-            return Response::json(['message' => 'Daily statistics not found'], 404);
+            return ResponseHelperService::error([
+                [
+                    'code' => 'not_found',
+                    'message' => 'Daily statistics not found',
+                ],
+            ], 404);
         }
 
-        return Response::json($statistic);
+        return ResponseHelperService::success($statistic);
     }
 }

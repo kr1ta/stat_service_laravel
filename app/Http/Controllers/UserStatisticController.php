@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserStatistic;
+use App\Services\ResponseHelperService;
 
 class UserStatisticController extends Controller
 {
@@ -11,9 +12,14 @@ class UserStatisticController extends Controller
         $statistic = UserStatistic::where('user_id', $userId)->first();
 
         if (! $statistic) {
-            return response()->json(['message' => 'Statistics not found'], 404);
+            return ResponseHelperService::error([
+                [
+                    'code' => 'not_found',
+                    'message' => 'Statistics not found',
+                ],
+            ], 404);
         }
 
-        return response()->json($statistic);
+        return ResponseHelperService::success($statistic);
     }
 }
